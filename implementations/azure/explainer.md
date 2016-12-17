@@ -28,8 +28,6 @@ attestation.on('change', response => {
 });
 
 attestation.send().then(response => {
-  if (response.status == 200) return response.json();
-}).then(response => {
   if (response.finalized) {
     console.log('The fully compiled proof receipt: ' + JSON.stringify(response.proof))
   }
@@ -46,8 +44,6 @@ var serialized = attestation.serialize();
 // Takes either active instance or a serialized stub and performs
 // a validation check on the Azure service
 attestations.validate(attestation).then(response => {
-  if (response.status == 200) return response.json();
-}).then(response => {
   console.log('Can I trust this attestation? --> ' + response.valid)
 });
 
