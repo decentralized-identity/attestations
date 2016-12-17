@@ -15,18 +15,41 @@ import Attestations from 'azure-attestations';
 
 var attestations = new Attestations(AZURE_ACCT_ID);
 
-var promise = attestations.requestProof({ 
+var attestation = attestations.create({ 
   ids: ['foo.id', 'bar.id'],
   chainpoint: true,
-  payload: { ... },
+  data: { ... }, // full data or hash, at user discretion
   callback: 'https://blockchain.nasdaq.com/attestations/callback'
-}).then(response => {
+});
+
+attestation.on('change', response => {
+  console.log('These identities have signed ' + json.signed.join(', '));
+  console.log('These identities still need to sign' + json.unsigned.join(', '));
+});
+
+attestation.send().then(response => {
   if (response.status == 200) return response.json();
-}).then(attestation => {
-  if (attestation.finalized) {
-    console.log('The following identities have signed ' + attestation.signers.join(', '));
+}).then(response => {
+  if (response.finalized) {
+    console.log('The fully compiled proof receipt: ' + JSON.stringify(response.proof))
   }
-})
+});
+
+attestation.status().then(response => {
+  console.log('These identities have signed ' + json.signed.join(', '));
+  console.log('These identities still need to sign' + json.unsigned.join(', '));
+});
+
+// helpful if the user wants to store the attestation stub outside of Azure
+var serialized = attestation.serialize();
+
+// Takes either active instance or a serialized stub and performs
+// a validation check on the Azure service
+attestations.validate(attestation).then(response => {
+  if (response.status == 200) return response.json();
+}).then(response => {
+  console.log('Can I trust this attestation? --> ' + response.valid)
+});
 
 
 ```
