@@ -23,8 +23,8 @@ var attestation = attestations.create({
 });
 
 attestation.on('change', response => {
-  console.log('These identities have signed ' + json.signed.join(', '));
-  console.log('These identities still need to sign' + json.unsigned.join(', '));
+  console.log('These identities have signed ' + response.signed.join(', '));
+  console.log('These identities still need to sign' + response.unsigned.join(', '));
 });
 
 attestation.send().then(response => {
@@ -36,8 +36,8 @@ attestation.send().then(response => {
 });
 
 attestation.status().then(response => {
-  console.log('These identities have signed ' + json.signed.join(', '));
-  console.log('These identities still need to sign' + json.unsigned.join(', '));
+  console.log('These identities have signed ' + response.signed.join(', '));
+  console.log('These identities still need to sign' + response.unsigned.join(', '));
 });
 
 // helpful if the user wants to store the attestation stub outside of Azure
