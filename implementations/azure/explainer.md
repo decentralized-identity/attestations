@@ -1,6 +1,6 @@
 # Azure Attestation Service
 
-The servuce allows the user to submit a payload for either decentralized identity signing, chainpoint blockchain anchoring, or both. The API exposes two primary endpoints:
+The service allows the user to submit a payload for either decentralized identity signing, chainpoint blockchain anchoring, or both. The API exposes two primary endpoints:
 
 1. Signing and anchoring of a payload
 2. Verification of a payload's signatures/chainpoint proof
