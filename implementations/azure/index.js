@@ -46,4 +46,12 @@ module.exports = class Attestations {
     })
   }
 
+  listen (id) {
+
+  }
+
+  verify (id) {
+    
+  }
+
 } 
