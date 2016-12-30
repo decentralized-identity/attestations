@@ -7,10 +7,6 @@ module.exports = class Attestations {
     this.key = options.key;
   }
 
-  instantiate (id) {
-    return new Attestation(id, key);
-  }
-
   create (options = {}) {
     return new Promise((resolve, reject) => {
       if (!options.ids && !options.chainpoint) {
