@@ -39,15 +39,15 @@ module.exports = class Attestations {
     });
   }
 
+  listen (id) {
+    
+  }
+
   status (id) {
     return got.get(azureService + '/status/' + id, {
       json: true,
       body: { key: this.key }
     })
-  }
-
-  listen (id) {
-
   }
 
   verify (id) {

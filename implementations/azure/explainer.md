@@ -14,8 +14,8 @@ The following section will describe the endpoints and provide example code from 
 import Attestations from 'azure-attestations';
 
 var attestations = new Attestations(AZURE_ACCT_ID);
-
-var attestation = attestations.create({ 
+var id;
+attestations.create({ 
   ids: [
     'foo.id',
     {
@@ -26,20 +26,22 @@ var attestation = attestations.create({
   chainpoint: true,
   data: { ... }, // full data or hash, at user discretion
   callback: 'https://blockchain.nasdaq.com/attestations/callback'
-});
+}).then(response => {
+  id = response.record.id;
+})
 
 attestations.retrieve(id).then(response => {
   console.log('The record for this attestation: ', response.record);
 });
 
 attestations.listen(id, 'change', response => {
-  console.log('These identities have signed ' + response.signed.join(', '));
-  console.log('These identities still need to sign' + response.unsigned.join(', '));
+  console.log('These identities have signed: ' + response.signed.join(', '));
+  console.log('These identities still need to sign: ' + response.unsigned.join(', '));
 });
 
 attestations.status(id).then(response => {
-  console.log('These identities have signed ' + response.signed.join(', '));
-  console.log('These identities still need to sign' + response.unsigned.join(', '));
+  console.log('These identities have signed: ' + response.signed.join(', '));
+  console.log('These identities still need to sign: ' + response.unsigned.join(', '));
 });
 
 // Probably will just be a variant of the status() call
