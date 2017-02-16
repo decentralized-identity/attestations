@@ -1,6 +1,6 @@
 
 const got = require('got');
-const azureService = 'https://attestations.azure.com';
+const azureService = 'http://ctdevattserv.azurewebsites.net';
 
 module.exports = class Attestations {
   constructor (options = {}) {
@@ -8,18 +8,23 @@ module.exports = class Attestations {
   }
 
   create (options = {}) {
+    console.log(options);
     return new Promise((resolve, reject) => {
-      if (!options.ids && !options.chainpoint) {
+      if ((!options.ids || !options.ids.length) && options.chainpoint === false) {
         throw 'You must specify an attestation action to perform - your choices are: identity signing, chain anchoring, or both';
       }
       if (!options.data) {
         throw 'You provided no attestation data';
       }
       options.key = this.key;
-      got.post(azureService + '/create', {
+      got.post(azureService + '/doc', {
         json: true,
         body: options
       }).then(response => {
+        console.log(response);
+        response.json().then(function(json){
+          console.log(json);
+        })
         resolve(response.record);
       }).catch(response => {
         reject(response)

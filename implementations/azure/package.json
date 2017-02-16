@@ -1,5 +1,7 @@
 {
 	"dependencies": {
-		"got": "*"
+		"got": "*",
+		"express": "*",
+		"body-parser": "*"
 	}
 }

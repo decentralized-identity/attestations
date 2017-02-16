@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Attestation Tester</title>
+    <style>
+      body {
+        padding: 2em;
+        font-family: Arial;
+      }
+      form {
+        display: inline-block;
+      }
+      label {
+        display: block;
+        margin: 0 0 1em;
+      }
+      input {
+        margin: 0 0 0.4em;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <form id="form" action="/create" method="post">
+      <label class="signer">
+        <div>ID</div>
+        <input name="id" placeholder="ID of signer"/>
+        <div>Endpoint</div>
+        <input name="endpoint" placeholder="Identity contact location"/>
+      </label>
+
+      <button id="add_signer" type="button">Add Signer</button>
+
+      <label>
+        <div>Data</div>
+        <textarea name="data" placeholder="Add attestation payload here" rows="5"></textarea>
+      </label>
+
+      <button>Create Attestation</button>
+    </form>
+
+    <script>
+
+      function notify(msg) {
+        if (!window.Notification) alert(msg);
+        else if (Notification.permission === "granted") {
+          var notification = new Notification(msg);
+        }
+        else if (Notification.permission !== 'denied') {
+          Notification.requestPermission(function (permission) {
+            if (permission === "granted") {
+              var notification = new Notification(msg);
+            }
+          });
+        }
+      }
+
+      function postJSON(path, obj){
+        return fetch(path, {
+          method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(obj)
+        })
+      }
+
+      document.getElementById('add_signer').addEventListener('pointerup', function(e){
+        this.parentNode.insertBefore(this.previousElementSibling.cloneNode(true), this);
+      });
+
+      document.getElementById('form').addEventListener('submit', function(e){
+
+        var form = this;
+
+        e.preventDefault();
+
+        postJSON('create', {
+          ids: Array.prototype.map.call(form.elements.id, function(e, i){
+            var id = e.value.trim();
+            var endpoint = form.elements.endpoint[i].value.trim();
+            return !endpoint ? id : {
+              id: id,
+              endpoint: endpoint
+            };
+          }),
+          data: form.elements.data.value
+        }).then(response => {
+          console.log(response);
+          return response.json().then(function(json) {
+            notify(json.status);
+          });
+        });
+
+      });
+    </script>
+
+  </body>
+</html>
