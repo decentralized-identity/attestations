@@ -1,8 +1,20 @@
 
-const got = require('got');
-const azureService = 'http://ctdevattserv.azurewebsites.net';
+var win = typeof window != 'undefined';
 
-module.exports = class Attestations {
+if (!win || !window.fetch) fetch = require('node-fetch');
+azureService = 'http://ctdevattserv.azurewebsites.net';
+
+function fetchJSON(method, path, obj){
+  return fetch(path, {
+    method: method,
+      headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(obj)
+  })
+}
+
+class Attestations {
   constructor (options = {}) {
     this.key = options.key;
   }
@@ -17,15 +29,10 @@ module.exports = class Attestations {
         throw 'You provided no attestation data';
       }
       options.key = this.key;
-      got.post(azureService + '/doc', {
-        json: true,
-        body: options
-      }).then(response => {
-        console.log(response);
+      fetchJSON('POST', azureService + '/doc', options).then(response => {
         response.json().then(function(json){
-          console.log(json);
-        })
-        resolve(response.record);
+          resolve(json);
+        });
       }).catch(response => {
         reject(response)
       })
@@ -35,11 +42,10 @@ module.exports = class Attestations {
   retrieve (id) {
     return new Promise((resolve, reject) => {
       if (this.record) resolve(this.record);
-      else got.get(azureService + '/attestation/' + id, {
-        json: true,
-        body: { key: this.key }
-      }).then(response => {
-        resolve(response.record);
+      else fetchJSON('GET', azureService + '/attestation/' + id, { key: this.key }).then(response => {
+        response.json().then(function(json){
+          resolve(json);
+        });
       })
     });
   }
@@ -49,14 +55,13 @@ module.exports = class Attestations {
   }
 
   status (id) {
-    return got.get(azureService + '/status/' + id, {
-      json: true,
-      body: { key: this.key }
-    })
+    return fetchJSON('GET', azureService + '/status/' + id, { key: this.key })
   }
 
   verify (id) {
     
   }
 
-} 
+}
+
+if (!win || win.module) module.exports = Attestations

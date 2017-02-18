@@ -1,6 +1,6 @@
 {
 	"dependencies": {
-		"got": "*",
+		"node-fetch": "*",
 		"express": "*",
 		"body-parser": "*"
 	}
