@@ -1,10 +1,9 @@
 
-var win = typeof window != 'undefined';
 
-if (!win || !window.fetch) fetch = require('node-fetch');
-azureService = 'http://ctdevattserv.azurewebsites.net';
+if (typeof fetch == 'undefined') fetch = require('node-fetch');
+const azureService = 'http://ctdevattserv.azurewebsites.net';
 
-function fetchJSON(method, path, obj){
+function jsonRequest(method, path, obj){
   return fetch(path, {
     method: method,
       headers: {
@@ -29,7 +28,7 @@ class Attestations {
         throw 'You provided no attestation data';
       }
       options.key = this.key;
-      fetchJSON('POST', azureService + '/doc', options).then(response => {
+      jsonRequest('POST', azureService + '/doc', options).then(response => {
         response.json().then(function(json){
           resolve(json);
         });
@@ -42,7 +41,7 @@ class Attestations {
   retrieve (id) {
     return new Promise((resolve, reject) => {
       if (this.record) resolve(this.record);
-      else fetchJSON('GET', azureService + '/attestation/' + id, { key: this.key }).then(response => {
+      else jsonRequest('GET', azureService + '/attestation/' + id, { key: this.key }).then(response => {
         response.json().then(function(json){
           resolve(json);
         });
@@ -55,7 +54,7 @@ class Attestations {
   }
 
   status (id) {
-    return fetchJSON('GET', azureService + '/status/' + id, { key: this.key })
+    return jsonRequest('GET', azureService + '/status/' + id, { key: this.key })
   }
 
   verify (id) {
@@ -64,4 +63,4 @@ class Attestations {
 
 }
 
-if (!win || win.module) module.exports = Attestations
+if (typeof module != 'undefined') module.exports = Attestations

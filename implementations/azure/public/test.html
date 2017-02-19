@@ -57,16 +57,6 @@
           });
         }
       }
-
-      // function postJSON(path, obj){
-      //   return fetch(path, {
-      //     method: 'POST',
-      //       headers: {
-      //       'Content-Type': 'application/json'
-      //     },
-      //     body: JSON.stringify(obj)
-      //   })
-      // }
       
       var attestations = new Attestations({
         key: 123
@@ -93,27 +83,8 @@
           }),
           data: form.elements.data.value
         }).then(response => {
-          return response.json().then(function(json) {
-            notify(json.status);
-          });
+          notify('Your attestation was successfully processed!');
         });
-
-        // postJSON('create', {
-        //   ids: Array.prototype.map.call(form.elements.id, function(e, i){
-        //     var id = e.value.trim();
-        //     var endpoint = form.elements.endpoint[i].value.trim();
-        //     return !endpoint ? id : {
-        //       id: id,
-        //       endpoint: endpoint
-        //     };
-        //   }),
-        //   data: form.elements.data.value
-        // }).then(response => {
-        //   console.log(response);
-        //   return response.json().then(function(json) {
-        //     notify(json.status);
-        //   });
-        // });
 
       });
     </script>
