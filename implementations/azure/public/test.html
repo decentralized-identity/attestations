@@ -73,7 +73,7 @@
         e.preventDefault();
 
         attestations.create({
-          ids: Array.prototype.map.call(form.elements.id, function(e, i){
+          signers: Array.prototype.map.call(form.elements.id, function(e, i){
             var id = e.value.trim();
             var endpoint = form.elements.endpoint[i].value.trim();
             return !endpoint ? id : {

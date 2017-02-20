@@ -19,9 +19,8 @@ class Attestations {
   }
 
   create (options = {}) {
-    console.log(options);
     return new Promise((resolve, reject) => {
-      if ((!options.ids || !options.ids.length) && options.chainpoint === false) {
+      if ((!options.signers || !options.signers.length) && options.chainpoint === false) {
         throw 'You must specify an attestation action to perform - your choices are: identity signing, chain anchoring, or both';
       }
       if (!options.data) {
@@ -40,8 +39,17 @@ class Attestations {
 
   retrieve (id) {
     return new Promise((resolve, reject) => {
-      if (this.record) resolve(this.record);
-      else jsonRequest('GET', azureService + '/attestation/' + id, { key: this.key }).then(response => {
+      jsonRequest('GET', azureService + '/doc/' + id, { key: this.key }).then(response => {
+        response.json().then(function(json){
+          resolve(json);
+        });
+      })
+    });
+  }
+
+  signer (id){
+    return new Promise((resolve, reject) => {
+      jsonRequest('GET', azureService + '/signer/' + id, { key: this.key }).then(response => {
         response.json().then(function(json){
           resolve(json);
         });
