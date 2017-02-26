@@ -16,22 +16,34 @@ import Attestations from 'azure-attestations';
 var attestations = new Attestations(AZURE_ACCT_ID);
 var id;
 attestations.create({ 
-  ids: [
+  signers: [
     'foo.id',
     {
       id: 'bar.id',
       endpoint: BAR_CONTACT_URL
     }
   ],
-  chainpoint: true,
+  chainpoint: true, // defaults to true
   data: { ... }, // full data or hash, at user discretion
   callback: 'https://blockchain.nasdaq.com/attestations/callback'
 }).then(response => {
-  id = response.record.id;
+  id = response.id;
 })
 
 attestations.retrieve(id).then(response => {
-  console.log('The record for this attestation: ', response.record);
+  console.log('The record for this attestation: ', response);
+});
+
+attestations.sign({
+  key: 'D3s44xhB...',
+  id: '89eaa73b-7b89-921b-6bfd-3d8a2367f83a',
+  data: { ... }
+}).then(response => {
+  console.log('Signature accepted', response);
+});
+
+attestations.signer(id).then(response => {
+  console.log('Data about this signer: ', response);
 });
 
 attestations.listen(id, 'change', response => {
@@ -52,3 +64,8 @@ attestations.verify(id).then(response => {
 
 
 ```
+
+## Generating Dist
+
+`$ browserify index.js -s attestations > dist.js`
+
