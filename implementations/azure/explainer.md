@@ -18,10 +18,7 @@ var id;
 attestations.create({ 
   signers: [
     'foo.id',
-    {
-      id: 'bar.id',
-      endpoint: BAR_CONTACT_URL
-    }
+    'bar.id'
   ],
   chainpoint: true, // defaults to true
   data: { ... }, // full data or hash, at user discretion
